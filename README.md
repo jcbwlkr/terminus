@@ -10,4 +10,6 @@ Depends on https://github.com/nsf/termbox-go
 
 ## TODOs
 * Better go doc
+* Colors
+* Mouse Support
 * Figure out how to mock termbox and test more of this
