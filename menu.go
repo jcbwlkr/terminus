@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+const (
+	Continue = iota
+	Exit
+)
+
 type Menu struct {
 	Title    string
 	Options  []MenuOption
@@ -16,10 +21,9 @@ type MenuOption struct {
 	Action func() int
 }
 
-const (
-	MenuContinue = iota
-	MenuExit
-)
+func NewExitOption(label string) MenuOption {
+	return MenuOption{label, func() int { return Exit }}
+}
 
 // Run is the main function that draws and handles a Menu. It is a blocking
 // operation.
@@ -44,7 +48,7 @@ loop:
 					m.selected--
 				}
 			} else if ev.Key == termbox.KeyEnter {
-				if result := m.Options[m.selected].Action(); result == MenuExit {
+				if result := m.Options[m.selected].Action(); result == Exit {
 					break loop
 				}
 			}
