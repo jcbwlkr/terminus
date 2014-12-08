@@ -1,11 +1,11 @@
-# terminus-go
-A Go library for making menus for terminal based apps.
+# Terminus
+A little Go framework for making interactive terminal based games/apps.
 
 ```
 Terminal Menus => Term Menus => termmenus => terminus (Because why not?)
 ```
 
-Depends on https://github.com/nsf/termbox-go
+Depends heavily on https://github.com/nsf/termbox-go
 
 
 ## TODOs
