@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jacobwalker0814/terminus"
+	"github.com/jcbwlkr/terminus"
 	"github.com/nsf/termbox-go"
 	"time"
 )
