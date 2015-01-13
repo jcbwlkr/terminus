@@ -38,7 +38,7 @@ loop:
 			if ev.Key == termbox.KeyEsc || ev.Key == termbox.KeyCtrlC || ev.Ch == 'q' || ev.Ch == 'Q' {
 				break loop
 			}
-			// TODO support vim and readline menu navigation
+			// TODO support vim and readline style menu navigation
 			if ev.Key == termbox.KeyArrowDown {
 				if m.selected < len(m.Options)-1 {
 					m.selected++
@@ -75,9 +75,9 @@ func (m *Menu) draw() {
 	var pre string
 	for i, opt := range m.Options {
 		if i == m.selected {
-			pre = "->"
+			pre = "→"
 		} else {
-			pre = " -"
+			pre = " "
 		}
 
 		draw_line(pre+" "+opt.Label, x, y)

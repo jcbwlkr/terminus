@@ -38,9 +38,12 @@ func shoot_right() int {
 
 	y := h / 2
 	for x := 0; x <= w; x++ {
-		termbox.SetCell(x, y, '>', termbox.ColorWhite, termbox.ColorDefault)
+		termbox.SetCell(x, y, '→', termbox.ColorWhite, termbox.ColorDefault)
+		if x > 0 {
+			termbox.SetCell(x-1, y, ' ', termbox.ColorWhite, termbox.ColorDefault)
+		}
 		termbox.Flush()
-		time.Sleep(6 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	return terminus.Continue
@@ -52,9 +55,13 @@ func shoot_left() int {
 
 	y := h / 2
 	for x := w; x >= 0; x-- {
-		termbox.SetCell(x, y, '<', termbox.ColorWhite, termbox.ColorDefault)
+		termbox.SetCell(x, y, '←', termbox.ColorWhite, termbox.ColorDefault)
+		if x < w {
+			termbox.SetCell(x+1, y, ' ', termbox.ColorWhite, termbox.ColorDefault)
+		}
+
 		termbox.Flush()
-		time.Sleep(6 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	return terminus.Continue
