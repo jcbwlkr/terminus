@@ -2,7 +2,6 @@ package terminus
 
 import (
 	"github.com/nsf/termbox-go"
-	"strings"
 )
 
 const (
@@ -12,17 +11,26 @@ const (
 
 type Menu struct {
 	Title    string
-	Options  []MenuOption
+	app      *App
+	options  []*MenuOption
 	selected int
+}
+
+func NewMenu(a *App) *Menu {
+	return &Menu{app: a, options: make([]*MenuOption, 0)}
+}
+
+func (m *Menu) AddOption(o *MenuOption) {
+	m.options = append(m.options, o)
 }
 
 type MenuOption struct {
 	Label  string
-	Action func() int
+	Action func(*App) int
 }
 
-func NewExitOption(label string) MenuOption {
-	return MenuOption{label, func() int { return Exit }}
+func NewExitOption(label string) *MenuOption {
+	return &MenuOption{label, func(a *App) int { return Exit }}
 }
 
 // Run is the main function that draws and handles a Menu. It is a blocking
@@ -40,7 +48,7 @@ loop:
 			}
 			// TODO support vim and readline style menu navigation
 			if ev.Key == termbox.KeyArrowDown {
-				if m.selected < len(m.Options)-1 {
+				if m.selected < len(m.options)-1 {
 					m.selected++
 				}
 			} else if ev.Key == termbox.KeyArrowUp {
@@ -48,7 +56,7 @@ loop:
 					m.selected--
 				}
 			} else if ev.Key == termbox.KeyEnter {
-				if result := m.Options[m.selected].Action(); result == Exit {
+				if result := m.options[m.selected].Action(m.app); result == Exit {
 					break loop
 				}
 			}
@@ -62,7 +70,7 @@ loop:
 }
 
 func (m *Menu) draw() {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+	m.app.Clear()
 	w, _ := termbox.Size()
 
 	// Draw our title string in the middle of the screen. Figure out how wide
@@ -70,35 +78,19 @@ func (m *Menu) draw() {
 	x := w/2 - maxLineLength(m.Title)/2
 	y := 0
 
-	y = draw_lines(m.Title, x, y)
+	y = m.app.DrawLines(m.Title, x, y)
 
 	var pre string
-	for i, opt := range m.Options {
+	for i, opt := range m.options {
 		if i == m.selected {
 			pre = "→"
 		} else {
 			pre = " "
 		}
 
-		draw_line(pre+" "+opt.Label, x, y)
+		m.app.DrawLine(pre+" "+opt.Label, x, y)
 		y++
 	}
 
 	termbox.Flush()
-}
-
-func draw_lines(lines string, x, y int) int {
-	for _, line := range strings.Split(lines, "\n") {
-		draw_line(line, x, y)
-		y++
-	}
-
-	return y
-}
-
-func draw_line(line string, x, y int) {
-	for _, r := range []rune(line) {
-		termbox.SetCell(x, y, r, termbox.ColorWhite, termbox.ColorDefault)
-		x++
-	}
 }

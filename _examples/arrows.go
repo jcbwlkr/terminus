@@ -12,7 +12,9 @@ func main() {
 	}
 	defer termbox.Close()
 
-	menu := new(terminus.Menu)
+	app := terminus.NewApp(termbox.ColorWhite, termbox.ColorBlack)
+
+	menu := terminus.NewMenu(app)
 
 	menu.Title = `
 ___
@@ -24,23 +26,22 @@ ___
  / ___ \| |  | | | (_) \ V  V /_____| (_| | || (_) | |
 /_/   \_\_|  |_|  \___/ \_/\_/       \__,_|\__\___/|_|
 `
-	menu.Options = make([]terminus.MenuOption, 3)
-	menu.Options[0] = terminus.MenuOption{"Shoot Right", shoot_right}
-	menu.Options[1] = terminus.MenuOption{"Shoot Left", shoot_left}
-	menu.Options[2] = terminus.NewExitOption("Quit")
+	menu.AddOption(&terminus.MenuOption{"Shoot Right", shoot_right})
+	menu.AddOption(&terminus.MenuOption{"Shoot Left", shoot_left})
+	menu.AddOption(terminus.NewExitOption("Quit"))
 
 	menu.Run()
 }
 
-func shoot_right() int {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+func shoot_right(app *terminus.App) int {
+	app.Clear()
 	w, h := termbox.Size()
 
 	y := h / 2
 	for x := 0; x <= w; x++ {
-		termbox.SetCell(x, y, '→', termbox.ColorWhite, termbox.ColorDefault)
+		app.DrawRune('→', x, y)
 		if x > 0 {
-			termbox.SetCell(x-1, y, ' ', termbox.ColorWhite, termbox.ColorDefault)
+			app.DrawRune(' ', x-1, y)
 		}
 		termbox.Flush()
 		time.Sleep(10 * time.Millisecond)
@@ -49,15 +50,15 @@ func shoot_right() int {
 	return terminus.Continue
 }
 
-func shoot_left() int {
-	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+func shoot_left(app *terminus.App) int {
+	app.Clear()
 	w, h := termbox.Size()
 
 	y := h / 2
 	for x := w; x >= 0; x-- {
-		termbox.SetCell(x, y, '←', termbox.ColorWhite, termbox.ColorDefault)
+		app.DrawRune('←', x, y)
 		if x < w {
-			termbox.SetCell(x+1, y, ' ', termbox.ColorWhite, termbox.ColorDefault)
+			app.DrawRune(' ', x+1, y)
 		}
 
 		termbox.Flush()
