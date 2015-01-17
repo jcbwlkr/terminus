@@ -43,7 +43,7 @@ loop:
 		case termbox.EventKey:
 			// Break on Escape, Ctrl-c, q, or Q
 			// TODO what's a more idiomatic way of doing this?
-			if ev.Key == termbox.KeyEsc || ev.Key == termbox.KeyCtrlC || ev.Ch == 'q' || ev.Ch == 'Q' {
+			if eventMeansCancel(ev) {
 				break loop
 			}
 			// TODO support vim and readline style menu navigation

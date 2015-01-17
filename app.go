@@ -37,3 +37,16 @@ func (a *App) DrawLine(line string, x, y int) {
 func (a *App) DrawRune(r rune, x, y int) {
 	termbox.SetCell(x, y, r, a.FgColor, a.BgColor)
 }
+
+func (a *App) WaitForEnter() {
+	for {
+		switch ev := termbox.PollEvent(); ev.Type {
+		case termbox.EventKey:
+			if eventMeansCancel(ev) || ev.Key == termbox.KeyEnter {
+				return
+			}
+		case termbox.EventError:
+			panic(ev.Err)
+		}
+	}
+}
